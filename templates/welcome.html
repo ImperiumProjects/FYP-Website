@@ -3,7 +3,9 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>Welcome</title>
+  <title>Leeway</title>
+
+  <link rel="icon" href="leeway_logo.png">
 
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -11,10 +13,10 @@
   <link href="../static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body class="grey lighten-4">
-  <nav class="deep-purple" role="navigation">
-    <div class="nav-wrapper container">Home
+  <nav class="blue darken-4" role="navigation">
+    <div class="nav-wrapper container">
       <ul class="right hide-on-med-and-down">
-        <li><a href="#jason">Jason Power</a></li>
+        <li><a class="white-text" href="#jason">Jason Power</a></li>
       </ul>
 
       <ul id="nav-mobile" class="side-nav">
@@ -23,58 +25,65 @@
       <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
   </nav>
-  <div class="section no-pad-bot" id="index-banner">
+  <div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
     <div class="container">
-      <br><br><br>
-      <h2 class="header center dark-grey-text">Final Year Project</h2>
+      <div class="center-align">
+        <br>
+        <img class="center responsive-img" src="leeway_logo.png" width="150" height="150">
+      </div>
+      <h3 class="header center dark-grey-text">Leeway</h3>
       <div class="row center">
-        <h5 class="header col s12 light">Flood Analysis and Prevention App built to predict flooding in the Cork area</h5>
+        <h5 class="header col s12 light">Flood Analysis and Prevention App built to predict flooding in the Cork City area</h5>
       </div>
-      <div class="row">
-        <div class="col s12 center">
-          <a href="http://connect.bakguicraft.com:3000" id="download-button" class="btn-large waves-effect waves-light grey">Grafana</a>
-          <a href="http://connect.bakguicraft.com:3000" id="download-button" class="btn-large waves-effect waves-light grey">Predictions</a>
-        </div>
       </div>
-      <br><br>
-    </div>
-  </div>
-
+      </div>
+      <div class="parallax"><img src="website_background_river.png" alt="Unsplashed background img 1"></div>
+      </div>
   <div class="container">
     <div class="section">
 
       <!--   Icon Section   -->
       <div class="row">
-        <div class="col s12 m4">
+        <div class="col s12 m6">
           <div class="icon-block">
-            <h2 class="center grey-text"><i class="material-icons">trending_up</i></h2>
+            <h2 class="center blue-text"><i class="material-icons">trending_up</i></h2>
             <h5 class="center">Grafana</h5>
 
             <p class="light">Visit Grafana to view historical and real-time graphs and informative dashboards related to the River Lee.</p>
           </div>
         </div>
 
-        <div class="col s12 m4">
+        <div class="col s12 m6">
           <div class="icon-block">
-            <h2 class="center grey-text"><i class="material-icons">settings</i></h2>
-            <h5 class="center">Placeholder</h5>
+            <h2 class="center blue-text"><i class="material-icons">cloud_download</i></h2>
+            <h5 class="center">App</h5>
 
-            <p class="light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center grey-text"><i class="material-icons">settings</i></h2>
-            <h5 class="center">Placeholder</h5>
-
-            <p class="light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p class="light">Download the official Android application from the Google Play Store to get real-time predictions, forecasts and various weather information for the Cork City area.</p>
           </div>
         </div>
       </div>
-
+      <div class="row">
+        <div class="col s12 m6 center">
+          <a href="http://grafana.myleeway.com:3000" id="download-button" class="btn-large waves-effect waves-light grey">Visit</a>
+        </div>
+        <div class="col s12 m6 center">
+          <a href="https://play.google.com/store/apps/details?id=com.leeway.imperium.finalyearproject" id="download-button" class="btn-large waves-effect waves-light grey">Download</a>
+        </div>
+        </div>
     </div>
     <br><br>
+  </div>
+
+    <div class="parallax-container valign-wrapper">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <div class="row center">
+          <h3 class="header col s12 light">A Final Year Project</h5>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="website_background_opposite.png" alt="Unsplashed background img 2"></div>
   </div>
 
   <div class="container">
@@ -82,49 +91,56 @@
 
       <!--   Icon Section   -->
       <div class="row" id="jason">
-        <div class="col s6">
+        <div class="col s12 m4">
           <div class="icon-block">
-            <h2 class="center grey-text"><i class="material-icons">person</i></h2>
+            <h2 class="center blue-text"><i class="material-icons">person</i></h2>
             <h5 class="center">Jason Power</h5>
 
-            <p class="light">114494448<br>
-              Final Year Computer Science student. This Final Year Project aims to provide a solution to the current lacking flood prediction systems in place in the Cork City and greater area.</p>
+            <p class="light">
+              Final Year Computer Science student. Experience with Mobile App Development, Java, Python, JavaScript, Server management and maintenance and Networking.</p>
           </div>
         </div>
 
-        <div class="col s6">
+        <div class="col s12 m8">
           <div class="icon-block">
-            <h2 class="center grey-text"><i class="material-icons">terrain</i></h2>
+            <h2 class="center blue-text"><i class="material-icons">terrain</i></h2>
             <h5 class="center">Outline</h5>
 
-            <p class="light">This project aims to provide a more inclusive solution to the analysis and prediction of floods on the River Lee in the Cork City and greater area.</p>
+            <p class="light">As mobile apps become more and more prevalent day to day, we are continually finding new and interesting methods of using these apps to improve our everyday lives. Cork City has had a history of being subject to many flooding events and Leeway aims to provide a solution to flooding prediction systems that are currently in place using live databases of information, statistics and machine learning.<br>
+			Utilizing these technologies, Leeway aims to provide users with an easy to use mobile app to get real time, up to date flooding predictions for the Cork City and greater region using live and historical river data. This is all supported by a large and growing database of information related to flooding analysis such as river levels, temperature, tidal levels and more.
+			</p>
           </div>
         </div>
       </div>
-
     </div>
     <br><br>
   </div>
 
-  <footer class="page-footer deep-purple lighten-1">
+  <footer class="page-footer blue darken-4">
   <div class="container">
     <div class="row">
       <div class="col l6 s12">
-        <h5 class="white-text">External Links</h5>
+        <h5 class="white-text">Technologies</h5>
         <p class="grey-text text-lighten-4">Grafana<br>
           Materialize<br>
+          Flask<br>
+          Keras<br>
+          Android<br>
         </p>
       </div>
       <div class="col l4 offset-l2 s12">
         <h5 class="white-text">Links</h5>
-        <ul>
-          <li><a class="grey-text text-lighten-3" href="https://grafana.com/">Grafana Website</a></li>
-          <li><a class="grey-text text-lighten-3" href="http://materializecss.com">Materialize Website</a></li>
-        </ul>
+        <p>
+          <a class="grey-text text-lighten-4" href="https://grafana.com/">Grafana Website</a><br>
+          <a class="grey-text text-lighten-4" href="http://materializecss.com">Materialize Website</a><br>
+          <a class="grey-text text-lighten-4" href="http://flask.pocoo.org/">Flask Website</a><br>
+          <a class="grey-text text-lighten-4" href="https://keras.io/">Keras Website</a><br>
+          <a class="grey-text text-lighten-4" href="https://www.android.com/">Android Website</a>
+        </p>
       </div>
     </div>
   </div>
-  <div class="footer-copyright deep-purple">
+  <div class="footer-copyright blue darken-3">
     <div class="container">
     Jason Power 114494448
     </div>
