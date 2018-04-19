@@ -8,24 +8,42 @@ from keras.layers import Dense
 from keras.optimizers import RMSprop
 from keras.callbacks import EarlyStopping
 
-historical_data_df = pd.read_csv("riverLevels.csv")
+from sqlalchemy import create_engine
+import pymysql
+
+###############################################################################
+#
+# Credit:
+#
+# This code is loosely based on the artificial intelligence II
+# course material presented by Dr. Derek Bridge, Recurrent Neural Network 
+# Examples, 2018
+#
+###############################################################################
+
+engine = 'mysql+mysqldb://scraper:scraper@84.200.193.29:3306/historical'
+conn = create_engine(engine)
+conn.connect()
+trans = conn.begin()
+
+#
+# Reading the data directly from the remote database
+# directly into a pandas dataframe
+#
+historical_data_df = pd.read_sql("select * from two_point_data", conn)
 
 historical_array = historical_data_df[["level"]].astype(float).values
-
-# Indexes for splitting the data
-length = len(historical_array)
-val_start_idx = int(0.6 * length)
-test_start_idx = int(0.8 * length)
 
 # Standard scaling
 # Compute means and standard deviations on the training data
 means = historical_array[:val_start_idx].mean(axis=0)
 stds = historical_array[:val_start_idx].std(axis=0)
+
 # Standardize all the data
 historical_array -= means
 historical_array /= stds
 
-def data_generator(array, min_idx, max_idx, seq_length = 672, delay = 1, batch_size = 64):
+def data_generator(array, min_idx, max_idx, seq_length, delay, batch_size):
     num_variables = array.shape[-1]
     if max_idx == None:
         max_idx = len(array) - delay - 1
@@ -42,28 +60,37 @@ def data_generator(array, min_idx, max_idx, seq_length = 672, delay = 1, batch_s
             targets[j] = array[row + delay][0]
         yield examples, targets
 
-train_generator = data_generator(historical_array, min_idx = 0, max_idx = val_start_idx)
-val_generator = data_generator(historical_array, min_idx = val_start_idx, max_idx = test_start_idx)
-test_generator = data_generator(historical_array, min_idx = test_start_idx, max_idx = None)
+#
+# seq_length = 672 (this is due to our dataset being in intervals of 
+# 15 minutes, meaning if we want sequences of 1 week long, our calculation
+# is formed by 7, the days in the week, and 96, the number of 15 minute
+# segments in a day == 7 * 96 = 672)
+#
+# delay = 168 (this value is the range of time we want to predict into the
+# future, in this case 7 * 24 == 168, for predicting 1 week in advance)
+#
+one_week_generator = data_generator(historical_array, min_idx = 0, max_idx = None, seq_length = 672,
+    delay = 168, batch_size = 64)
 
-val_steps = test_start_idx - (val_start_idx + 1) - 24
-test_steps = length - (test_start_idx + 1) - 24
+#
+# delay = 336 (this value is the range of time we want to predict into the
+# future, in this case 14 * 24 == 168, for predicting 2 weeks in advance)
+#
+two_week_generator = data_generator(historical_array, min_idx = 0, max_idx = None, seq_length = 672,
+    delay = 336, batch_size = 64)
 
-def evaluate_baseline(data_generator):
-    batch_maes = []
-    for step in range(val_steps):
-        examples, targets = next(data_generator)
-        preds = examples[:, -1, 0]
-        mae = np.mean(np.abs(preds - targets))
-        batch_maes.append(mae)
-    return np.mean(batch_maes)
+#
+# delay = 672 (this value is the range of time we want to predict into the
+# future, in this case 28 * 24 == 168, for predicting 1 month in advance)
+#
+# Unrelated fun fact, there are the same amount of hours in a 28-day
+# month as there are 15 minute segments in a day, who knew?
+#
+one_month_generator = data_generator(historical_array, min_idx = 0, max_idx = None, seq_length = 672,
+    delay = 672, batch_size = 64)
 
 def to_meters(level):
     return level * stds[0]
-
-mae = evaluate_baseline(val_generator)
-
-to_meters(mae)
 
 def build_rnn():
     network = Sequential()
@@ -74,17 +101,36 @@ def build_rnn():
 
 network = build_rnn()
 
-history = network.fit_generator(
-    train_generator, steps_per_epoch=500, epochs=20,
-    validation_data=val_generator, validation_steps=val_steps,
-    callbacks=[EarlyStopping(monitor="val_loss", patience=1)],
-    verbose=0)
+#
+# One week section
+#
+one_week_prediction = network.predict_generator(
+    self, one_week_generator, steps=500, max_queue_size=10, 
+    workers=4, use_multiprocessing=True, verbose=0)
 
-# Since patience was 1, perhaps use the validation MAE from just before that point
-val_mae = history.history["val_mean_absolute_error"][-2]
+one_week_value = one_week_prediction.to_meters()
+conn.execute("INSERT INTO seven_day_forecast VALUES (?)", one_week_value)
 
-to_meters(val_mae)
+#
+# Two week section
+#
+two_week_prediction = network.predict_generator(
+    self, two_week_generator, steps=500, max_queue_size=10, 
+    workers=4, use_multiprocessing=True, verbose=0)
 
-test_loss, test_mae = network.evaluate_generator(test_generator, steps=test_steps)
+two_week_value = two_week_prediction.to_meters()
+conn.execute("INSERT INTO two_week_forecast VALUES (?)", two_week_value)
 
-to_meters(test_mae)
+#
+# One month section
+#
+one_month_prediction = network.predict_generator(
+    self, one_month_generator, steps=500, max_queue_size=10, 
+    workers=4, use_multiprocessing=True, verbose=0)
+
+one_month_value = one_month_prediction.to_meters()
+conn.execute("INSERT INTO one_month_forecast VALUES (?)", one_month_value)
+
+trans.commit()
+
+conn.close()

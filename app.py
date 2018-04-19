@@ -3,14 +3,12 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify, send_file
 import pymysql
 import app_prediction
-import subprocess
 import php_python
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    #return render_template('welcome.html')
     return render_template('welcome.html')
 
 @app.route('/test')
@@ -23,11 +21,8 @@ def test_script():
     app_prediction.predict()
     cur = db.cursor()
     cur.execute("SELECT percentage FROM predictions ORDER BY id DESC LIMIT 1")
-    #return (cur.description)
     sql_percent = str(cur.fetchone())[1:-2]
     percent = {"percent": sql_percent}
-    #return render_template('retrieve_number.html')
-    #return jsonify(data=cur.fetchone())
     cur.close()
     return '''
 <html>
@@ -60,8 +55,18 @@ def prediction_script():
     cur.execute("SELECT percentage FROM predictions ORDER BY id DESC LIMIT 1")
     sql_percent = str(cur.fetchone())[1:-2]
     percent = {"percent": sql_percent}
-    #return render_template('retrieve_number.html')
-    #return jsonify(data=cur.fetchone())
+
+    cur.execute("SELECT prediction FROM seven_day_forecast ORDER BY id DESC LIMIT 1")
+    sql_sevenday = str(cur.fetchone())[1:-2]
+    sevenday = {"sevenday": sql_sevenday}
+
+    cur.execute("SELECT prediction FROM two_week_forecast ORDER BY id DESC LIMIT 1")
+    sql_twoweek = str(cur.fetchone())[1:-2]
+    twoweek = {"twoweek": sql_twoweek}
+
+    cur.execute("SELECT prediction FROM one_month_forecast ORDER BY id DESC LIMIT 1")
+    sql_onemonth = str(cur.fetchone())[1:-2]
+    onemonth = {"onemonth": sql_onemonth}
     cur.close()
     return '''
 <html>
@@ -74,28 +79,11 @@ def prediction_script():
         Temp: ''' + templevel['templevel'] + '''<br>
         Tidal: ''' + tidallevel['tidallevel'] + '''<br>
         Rain: ''' + percent['percent'] + '''<br>
-        Seven: ''' + percent['percent'] + '''<br>
-        Two: ''' + percent['percent'] + '''<br>
-        One: ''' + percent['percent'] + '''
+        Seven: ''' + sevenday['sevenday'] + '''<br>
+        Two: ''' + twoweek['twoweek'] + '''<br>
+        One: ''' + onemonth['onemonth'] + '''
     </body>
 </html>'''
-
-#@app.route('/database_query.php')
-#def php_script():
-    #return php_python.php_connection()
-    #return str(subprocess.call("php_python.py", shell=True))
-    #return redirect(url_for('welcome'))
-    #return render_template('database_query.php')
-
-#@app.route('/php_python')
-#def py_php_script():
-    #php_python.php_connection()
-    #return redirect(url_for('welcome'))
-
-#@app.route('/prediction')
-#def prediction():
-    #app_prediction.predict()
-    #return render_template('predictions.html')
 
 @app.route('/welcome')
 def welcome():
